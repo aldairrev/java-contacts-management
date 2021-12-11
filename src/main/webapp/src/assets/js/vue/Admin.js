@@ -24,9 +24,7 @@
 
 import axios from 'axios';
 import VGrid from "@revolist/vue3-datagrid";
-
 import { defineComponent, reactive } from "vue";
-
 export default {
     data() {
         return {
@@ -76,36 +74,44 @@ export default {
         submitCreateContact(e) {
             e.preventDefault();
             this.isLoadingRequest = true;
-
-            let formData = new FormData();
-            formData.append('firstname', this.contacts.create.firstname);
-            formData.append('surname', this.contacts.create.surname);
-            formData.append('email', this.contacts.create.email);
-            formData.append('photo', this.contacts.create.photo);
-            formData.append('address', this.contacts.create.address);
+            let formData_photo = new FormData();
+            formData_photo.append('photo', this.contacts.create.photo);
             const url = e.target.action;
-            const options = {
+            let options_photo = {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             };
             const self = this;
-            axios.post(url, formData, options).then(function (resp) {
-                console.log(resp);
-                if (resp.status === 200) {
-                    if (resp.data.success) {
-                        self.response = {
-                            checking: true,
-                            success: true,
-                            message: resp.data.data.message
-                        };
-                    } else {
-                        self.errors.push(resp.data.data.message);
-                        self.isLoadingRequest = false;
+            console.log(this.contacts.create.firstname);
+            axios.post(url + '/photo', formData_photo, options_photo).then(function (resp) {
+                const params = new URLSearchParams();
+                params.append('firstname', self.contacts.create.firstname);
+                params.append('surname', self.contacts.create.surname);
+                params.append('email', self.contacts.create.email);
+                params.append('photo', resp.data.data.photo);
+                params.append('address', self.contacts.create.address);
+                let options = {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     }
-                } else {
-                    self.isLoadingRequest = false;
-                }
+                };
+                axios.post(url, params, options).then(function (res) {
+                    if (res.status === 200) {
+                        if (res.data.success) {
+                            self.response = {
+                                checking: true,
+                                success: true,
+                                message: res.data.data.message
+                            };
+                        } else {
+//                            self.errors.push(resp.data.data.message);
+                            self.isLoadingRequest = false;
+                        }
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
             }).catch(function (error) {
                 console.log(error);
             });
