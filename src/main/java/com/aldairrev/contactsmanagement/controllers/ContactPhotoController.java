@@ -51,32 +51,21 @@ import org.json.JSONObject;
  *
  * @author aldairrev
  */
-@WebServlet(name = "ContactsController", urlPatterns = {"/admin/contacts"})
+@WebServlet(name = "ContactsPhotoController", urlPatterns = {"/admin/contacts/photo"})
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
         maxFileSize = 1024 * 1024 * 10, // 10 MB
         maxRequestSize = 1024 * 1024 * 100 // 100 MB
 )
-public class ContactsController extends HttpServlet {
+public class ContactPhotoController extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession(true);
-
-    }
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         Dotenv dotenv = Dotenv.load();
-
-        String firstname = "A";
-        String surname = "A";
-        String email = "A";
-        String address = "A";
+        boolean status = false;
 
         String photo_name = "";
         try {
@@ -95,54 +84,33 @@ public class ContactsController extends HttpServlet {
                     String photo_ext = name.substring(photo_index_ext + 1);
 
                     photo_name = timestamp.getTime() + "." + photo_ext;
+
+                    status = true;
                     item.write(new File(uploadPath + File.separator + photo_name));
                 }
             }
-
         } catch (Exception ex) {
             System.out.println("File Upload Failed due to " + ex);
         }
 
         String photo = dotenv.get("APP_URL") + "/public/images/" + photo_name;
 
-        AD_Contact AD = new AD_Contact();
-        boolean status;
-
-        try {
-            EE_Contact contact = new EE_Contact(firstname, surname, email, address, photo);
-            System.out.println("CREATE CONTACT");
-            System.out.println(contact.toString());
-
-            status = AD.create(contact);
-            if (status) {
-                JSONObject resp_jo = new JSONObject();
-                JSONObject data_jo = new JSONObject();
-                data_jo.put("message", "Contact created successfully! Now you can see it your list.");
-                resp_jo.put("success", true);
-                resp_jo.put("data", data_jo);
-
-                PrintWriter out = resp.getWriter();
-                resp.setContentType("application/json");
-                resp.setCharacterEncoding("UTF-8");
-                out.print(resp_jo.toString());
-                out.flush();
-            } else {
-                JSONObject resp_jo = new JSONObject();
-                JSONObject data_jo = new JSONObject();
-                data_jo.put("message", "Ops! Contact can't be created, please try again!");
-                resp_jo.put("success", false);
-                resp_jo.put("data", data_jo);
-
-                PrintWriter out = resp.getWriter();
-                resp.setContentType("application/json");
-                resp.setCharacterEncoding("UTF-8");
-                out.print(resp_jo.toString());
-                out.flush();
-            }
-        } catch (SQLException ex) {
+        if (status) {
             JSONObject resp_jo = new JSONObject();
             JSONObject data_jo = new JSONObject();
-            data_jo.put("message", "Ops! Contact can't be created, please try again!");
+            data_jo.put("photo", photo);
+            resp_jo.put("success", true);
+            resp_jo.put("data", data_jo);
+
+            PrintWriter out = resp.getWriter();
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            out.print(resp_jo.toString());
+            out.flush();
+        } else {
+            JSONObject resp_jo = new JSONObject();
+            JSONObject data_jo = new JSONObject();
+            data_jo.put("message", "Ops! Photo can't be uploaded, please try again");
             resp_jo.put("success", false);
             resp_jo.put("data", data_jo);
 
@@ -151,19 +119,7 @@ public class ContactsController extends HttpServlet {
             resp.setCharacterEncoding("UTF-8");
             out.print(resp_jo.toString());
             out.flush();
-
-            Logger.getLogger(ContactsController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doDelete(req, resp); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -173,7 +129,7 @@ public class ContactsController extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Running DashboardController";
+        return "Running ContactPhotoController";
     }// </editor-fold>
 
 }

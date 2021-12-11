@@ -59,6 +59,8 @@ public class AD_Contact {
                     contact.setEmail(rst.getString("email"));
                     contact.setPhoto(rst.getString("photo"));
                     contact.setAddress(rst.getString("address"));
+                    
+                    contacts.add(contact);
                 }
             } else {
                 System.out.println("Error Creating a Contact");

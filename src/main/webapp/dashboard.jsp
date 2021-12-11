@@ -54,9 +54,7 @@
                             theme="material"
                             :source="rows"
                             :columns="columns"
-                            :filter="true"
                             :resize="true"
-                            :autoSizeColumn="true"
                             style="height: 500px"/>
                     </div>
                     <div class="mt-4" v-show="contacts.page === 'create'">
@@ -83,12 +81,12 @@
                             </div>
                             <div class= "col-md-3">
                                 <label for="createImage" class="form-label">Photo</label>
-                                <input class="form-control" type="file" id="createPhoto" ref="createPhoto" v-on:change="onChangeFileUpload()" :disabled="isLoadingRequest" required>
+                                <input class="form-control" type="file" id="createPhoto" ref="createPhoto" v-on:change="onChangeCreatePhotoUpload()" :disabled="isLoadingRequest" required>
                             </div>
                             <div class="w-100">
                                 <button type="submit" class="w-100 btn btn-primary" :disabled="isLoadingRequest">Create Contact</button>
                             </div>
-                            <div class="alert alert-success"
+                            <div class="w-100 alert alert-success"
                                  role="alert"
                                  v-if="response.checking">
                                 {{ response.message }}
@@ -97,32 +95,36 @@
                     </div>
                     <div class="mt-4" v-show="contacts.page === 'update'">
                         <h3>Edit</h3>
-                        <form class="row g-3 mt-4">
+                        <form 
+                            class="row g-3 mt-4"
+                            enctype="multipart/form-data"
+                            @submit="submitUpdateContact"
+                            action="${APP_URL}/admin/contacts">
                             <div class="row">
                                 <div class="col-12 col-md-4">
                                     <label for="updateId" class="form-label">Id</label>
-                                    <input type="number" class="form-control" id="updateId" required>
+                                    <input type="number" class="form-control" id="updateId" @blur="getDataUpdateFields" value="0" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label for="updateFirstname" class="form-label">Firstname</label>
-                                <input type="text" class="form-control" id="updateFirstname" required>
+                                <input type="text" class="form-control" id="updateFirstname" v-model="contacts.update.firstname" :disabled="isLoadingRequest" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="updateSurname" class="form-label">Surname</label>
-                                <input type="Text" class="form-control" id="updateSurname" required>
+                                <input type="Text" class="form-control" id="updateSurname" v-model="contacts.update.surname" :disabled="isLoadingRequest" required>
                             </div>
                             <div class="col-md-4">
                                 <label for="updateEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="updateEmail" placeholder="example@noreply.com" required>
+                                <input type="email" class="form-control" id="updateEmail" placeholder="example@noreply.com" v-model="contacts.update.email" :disabled="isLoadingRequest" required>
                             </div>
                             <div class="col-md-5">
                                 <label for="updateAddress" class="form-label">Address</label>
-                                <input type="text" class="form-control" id="updateAddress" placeholder="Apartment, studio, or floor" required>
+                                <input type="text" class="form-control" id="updateAddress" placeholder="Apartment, studio, or floor" v-model="contacts.update.address" :disabled="isLoadingRequest" required>
                             </div>
                             <div class="col-md-3">
-                                <label for="updateImage" class="form-label">Photo</label>
-                                <input class="form-control" type="file" id="updateImage">
+                                <label for="updatePhoto" class="form-label">Photo</label>
+                                <input class="form-control" type="file" id="updatePhoto" ref="updatePhoto" v-on:change="onChangeUpdatePhotoUpload()" :disabled="isLoadingRequest">
                             </div>
                             <div class="w-100">
                                 <button type="submit" class="w-100 btn btn-primary">Create Contact</button>
