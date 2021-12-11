@@ -96,19 +96,9 @@ public class ContactsController extends HttpServlet {
 
                     photo_name = timestamp.getTime() + "." + photo_ext;
                     item.write(new File(uploadPath + File.separator + photo_name));
-                } else {
-                    System.out.println("item.isFormField()");
-                    String name = new File(item.getName()).getName();
-                    System.out.println(name);
-                    
                 }
             }
-            firstname = req.getParameter("firstname");
-                    surname = req.getParameter("surname");
-                    email = req.getParameter("email");
-                    address = req.getParameter("address");
-            
-            
+
         } catch (Exception ex) {
             System.out.println("File Upload Failed due to " + ex);
         }
