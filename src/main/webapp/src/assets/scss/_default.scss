@@ -1,0 +1,67 @@
+.bg-image {
+    background-size: cover;
+    background-position: center;
+}
+
+.logo-size {
+    width: 128px;
+    height: 128px;
+}
+
+.form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+    & .form-floating:focus-within {
+        z-index: 2;
+    }
+    & input[type="email"] {
+        margin-bottom: -1px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    & input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+}
+
+.form-signup {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+    & .form-floating:focus-within {
+        z-index: 2;
+    }
+    & #firstname{
+        margin-bottom: -1px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    & #surname{
+        border-radius: 0;
+    }
+    & #email{
+        border-radius: 0;
+    }
+    & #pass{
+        border-radius: 0;
+    }
+    & #pass_two{
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+}
+
+.page {
+    max-width: 800px;
+    margin: 0 auto;
+    @media (max-width: $responsive-width) {
+        width: calc(100% - #{$responsive-margin * 2});
+        margin: 0 #{$responsive-margin};
+    }
+}
