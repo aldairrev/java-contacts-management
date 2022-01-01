@@ -264,7 +264,73 @@ public class ContactsController extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doDelete(req, resp); //To change body of generated methods, choose Tools | Templates.
+        req.setCharacterEncoding("UTF-8");
+
+        BufferedReader br;
+        br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+
+        String data = br.readLine();
+
+        String[] params = data.split("&");
+
+        int id = 0;
+
+        for (String param : params) {
+            String key = param.split("=")[0];
+            String val = param.split("=")[1];
+            System.out.println(val);
+            switch (key) {
+                case "id":
+                    id = Integer.parseInt(val);
+                    break;
+            }
+        }
+
+        AD_Contact AD = new AD_Contact();
+        boolean status;
+
+        try {
+            status = AD.delete(id);
+            if (status) {
+                JSONObject resp_jo = new JSONObject();
+                JSONObject data_jo = new JSONObject();
+                data_jo.put("message", "Contact deleted successfully!");
+                resp_jo.put("success", true);
+                resp_jo.put("data", data_jo);
+
+                PrintWriter out = resp.getWriter();
+                resp.setContentType("application/json");
+                resp.setCharacterEncoding("UTF-8");
+                out.print(resp_jo.toString());
+                out.flush();
+            } else {
+                JSONObject resp_jo = new JSONObject();
+                JSONObject data_jo = new JSONObject();
+                data_jo.put("message", "Ops! Contact can't be deleted, please try again!");
+                resp_jo.put("success", false);
+                resp_jo.put("data", data_jo);
+
+                PrintWriter out = resp.getWriter();
+                resp.setContentType("application/json");
+                resp.setCharacterEncoding("UTF-8");
+                out.print(resp_jo.toString());
+                out.flush();
+            }
+        } catch (SQLException ex) {
+            JSONObject resp_jo = new JSONObject();
+            JSONObject data_jo = new JSONObject();
+            data_jo.put("message", "Ops! Contact can't be deleted, please try again!");
+            resp_jo.put("success", false);
+            resp_jo.put("data", data_jo);
+
+            PrintWriter out = resp.getWriter();
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            out.print(resp_jo.toString());
+            out.flush();
+
+            Logger.getLogger(ContactsController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

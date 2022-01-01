@@ -139,7 +139,7 @@ public class AD_Contact {
         return state;
     }
     
-    public boolean delete(EE_Contact contact) throws SQLException {
+    public boolean delete(int id) throws SQLException {
         boolean state = false;
         Connection conn = null;
 
@@ -149,7 +149,7 @@ public class AD_Contact {
                 String SQL = "DELETE FROM contacts WHERE id = ?";
                 PreparedStatement pst;
                 pst = conn.prepareStatement(SQL);
-                pst.setInt(1, contact.getId());
+                pst.setInt(1, id);
                 int res = 0;
                 res = pst.executeUpdate();
                 if (res > 0) {

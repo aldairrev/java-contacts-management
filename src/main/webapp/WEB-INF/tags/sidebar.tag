@@ -40,7 +40,7 @@
             <hr>
             <ul class="nav nav-pills flex-column">
                 <li>
-                    <a href="#" class="nav-link link-dark">
+                    <a href="${APP_URL}/admin/logout" class="nav-link link-dark">
                         <i class="fas fa-sign-out-alt me-0 me-sm-2"></i>
                         <span class="d-none d-sm-inline">Logout</span>
                     </a>

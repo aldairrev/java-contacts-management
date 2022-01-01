@@ -84,7 +84,7 @@
                                 <input class="form-control" type="file" id="createPhoto" ref="createPhoto" v-on:change="onChangeCreatePhotoUpload()" :disabled="isLoadingRequest" required>
                             </div>
                             <div class="w-100">
-                                <button type="submit" class="w-100 btn btn-primary" :disabled="isLoadingRequest">Create Contact</button>
+                                <button type="submit" class="w-100 btn btn-success" :disabled="isLoadingRequest">Create Contact</button>
                             </div>
                             <div class="w-100 alert alert-success"
                                  role="alert"
@@ -103,7 +103,7 @@
                             <div class="row">
                                 <div class="col-12 col-md-4">
                                     <label for="updateId" class="form-label">Id</label>
-                                    <input type="number" class="form-control" id="updateId" @blur="getDataUpdateFields" value="0" required>
+                                    <input type="number" class="form-control" id="updateId" @blur="getDataUpdateFields" value="0" :disabled="isLoadingRequest" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -127,12 +127,37 @@
                                 <input class="form-control" type="file" id="updatePhoto" ref="updatePhoto" v-on:change="onChangeUpdatePhotoUpload()" :disabled="isLoadingRequest">
                             </div>
                             <div class="w-100">
-                                <button type="submit" class="w-100 btn btn-primary">Create Contact</button>
+                                <button type="submit" class="w-100 btn btn-warning">Update Contact</button>
+                            </div>
+                            <div class="w-100 alert alert-success"
+                                 role="alert"
+                                 v-if="response.checking">
+                                {{ response.message }}
                             </div>
                         </form>
                     </div>
                     <div class="mt-4" v-show="contacts.page === 'delete'">
-                        Delete
+                        <h3>Delete</h3>
+                        <form 
+                            class="row g-3 mt-4"
+                            enctype="multipart/form-data"
+                            @submit="submitDeleteContact"
+                            action="${APP_URL}/admin/contacts">
+                            <div class="row">
+                                <div class="col-12 col-md-4">
+                                    <label for="updateId" class="form-label">Id</label>
+                                    <input type="number" class="form-control" id="deleteId" v-model="contacts.delete.id" value="0" :disabled="isLoadingRequest" required>
+                                </div>
+                            </div>
+                            <div class="w-100">
+                                <button type="submit" class="w-100 btn btn-danger">Delete Contact</button>
+                            </div>
+                            <div class="w-100 alert alert-success"
+                                 role="alert"
+                                 v-if="response.checking">
+                                {{ response.message }}
+                            </div>
+                        </form>
                     </div>
                 </div>
             </jsp:body>

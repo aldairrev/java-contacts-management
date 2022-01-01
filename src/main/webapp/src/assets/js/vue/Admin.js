@@ -47,6 +47,9 @@ export default {
                     photo: '',
                     address: '',
                     photo_url: ''
+                },
+                delete: {
+                    id: 0
                 }
             },
             response: {
@@ -201,7 +204,41 @@ export default {
                 });
             }
         },
+        submitDeleteContact(e) {
+            e.preventDefault();
 
+            this.isLoadingRequest = true;
+            const url = e.target.action;
+
+            const params = new URLSearchParams();
+            params.append('id', this.contacts.delete.id);
+            console.log(params)
+            let options = {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: params
+            };
+            const self = this;
+            axios.delete(url, options).then(function (res) {
+                if (res.status === 200) {
+                    if (res.data.success) {
+                        self.response = {
+                            checking: true,
+                            success: true,
+                            message: res.data.data.message
+                        };
+                        self.getContacts();
+                    } else {
+                        self.isLoadingRequest = false;
+                    }
+                } else {
+                    self.isLoadingRequest = false;
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
         getDataUpdateFields(e) {
             const id = e.target.value;
             var contact = this.contacts.data.find(contact => {
